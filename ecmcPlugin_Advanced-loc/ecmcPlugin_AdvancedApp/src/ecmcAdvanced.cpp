@@ -19,7 +19,6 @@
 
 // read rt sample time 
 double getSampleRate(void* ecmcRefs) {
-  printf("\n##########GetSampleRate()####################\n");
   if(ecmcRefs) {
     ecmcPluginDataRefs* dataFromEcmc = (ecmcPluginDataRefs*)ecmcRefs;
     // call report()!    
@@ -29,12 +28,11 @@ double getSampleRate(void* ecmcRefs) {
 }
 
 // Demo simple use of asynPort. Most ecmc data can be accessed from asynPort 
-void useAsynPort(void* ecmcRefs) {
-  printf("\n##########useAsynPort()####################\n");
+void* getAsynPort(void* ecmcRefs) {
+    
   if(ecmcRefs) {
-    ecmcPluginDataRefs* dataFromEcmc = (ecmcPluginDataRefs*)ecmcRefs;
-    // call report()!
-    dataFromEcmc->ecmcAsynPort->report(stdout,3);
+    ecmcPluginDataRefs* dataFromEcmc = (ecmcPluginDataRefs*)ecmcRefs;    
+    return dataFromEcmc->ecmcAsynPort;
   }
-  return;
+  return NULL;
 }

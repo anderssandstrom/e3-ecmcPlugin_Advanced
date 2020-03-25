@@ -17,7 +17,7 @@ extern "C" {
 #endif  // ifdef __cplusplus
 
 double getSampleRate(void* ecmcRefs);
-void   useAsynPort(void* ecmcRefs);
+void*  getAsynPort(void* ecmcRefs);
 
 #ifdef __cplusplus
 }
