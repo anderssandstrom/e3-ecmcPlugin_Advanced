@@ -39,10 +39,18 @@ struct ecmcPluginData {
 };
 ```
 ## Callbacks:
+All callbacks are optional. If the callbacks are not used then set the func pointer to NULL 
+("ecmcPluginData.*Fnc=NULL").
+
+Example:
+```
+ecmcPluginData.destructFnc=NULL"
+ecmcPluginData.constructFnc=NULL"
+...
+```
 
 ### int  constructFnc(), optional
 This callback is called once when the plugin is loaded into ecmc. This is a good place to put code for any initialization needed in the plugin module.
-If not used then set "ecmcPluginData.constructFnc=NULL".
 
 Return value: 0 for success or error code.
 
@@ -50,13 +58,11 @@ In this example plugin only a printout is made in this callback.
 
 ### void destructFnc(), optional
 This callback is called once when the plugin is unloaded. This is a good place to put cleanup code needed by the plugin module.
-If not used then set "ecmcPluginData.destructFnc=NULL".
 
 In this example plugin only a printout is made in this callback.
 
 ### int realtimeFnc(int ecmcErrorId), optional
 This callback is called once in each realtime loop (sync to ecmc). This is a good place to put any cyclic processing needed by the plugin module.
-If not used then set "ecmcPluginData.realtimeFnc=NULL".
 
 Parameters: ecmcErrorId: reflects the current errorstate of ecmc.
 
@@ -66,7 +72,6 @@ In this example a counter value is increased for each call and the coresponding 
 
 ### int realtimeEnterFnc(void* ecmcRefs), optional
 This callback is called once just before ecmc enters realtime mode (starts rt-thread). This is a good place to make any prepartions needed before cyclic processing starts.
-If not used then set "ecmcPluginData.enterRealTimeFnc=NULL".
 
 Parameters: ecmcRefs: ref to ecmcdata that can be cast to ecmcPluginDataRefs
 ```
@@ -75,15 +80,12 @@ struct ecmcPluginDataRefs {
   ecmcAsynPortDriver *ecmcAsynPort;
 };
 ```
-IMPORTANT! This structure is only valid the time between calls of "realtimeEnterFnc()" and "realtimeExitFnc()".
-
 Return value: 0 for success or error code.
 
 In this example a asyn parameter called "plugin.adv.counter" is registered. The ecmc realtime samplerate is also determined from the ecmcRefs
 
 ### int realtimeExitFnc(), optional
 This callback is called once just before ecmc exits realtime mode (exits rt-thread).
-If not used then set "ecmcPluginData.exitRealTimeFnc=NULL".
 
 Return value: 0 for success or error code.
 
