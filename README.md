@@ -32,9 +32,9 @@ struct ecmcPluginData {
   int (*realtimeExitFnc)(void);
   // Optional func that will be called each realtime cycle
   int (*realtimeFnc)(int);
-  // Allow max ECMC_PLUGIN_MAX_FUNC_COUNT custom functions
+  // Allow max ECMC_PLUGIN_MAX_PLC_FUNC_COUNT custom plc functions
   struct ecmcOnePlcFunc  funcs[ECMC_PLUGIN_MAX_PLC_FUNC_COUNT];
-  // Allow max ECMC_PLUGIN_MAX_PLC_CONST_COUNT custom constants
+  // Allow max ECMC_PLUGIN_MAX_PLC_CONST_COUNT custom plc constants
   struct ecmcOnePlcConst consts[ECMC_PLUGIN_MAX_PLC_CONST_COUNT];
 };
 ```
