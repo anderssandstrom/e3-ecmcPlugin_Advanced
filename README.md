@@ -7,8 +7,8 @@ Example illustrating a plugin for use with ecmc.
 Shows how to implement:
 * callbacks 
 * custom ecmc plc-functions
-* custom plc-constants 
-* access to ecmcAsynPort object to add a plugin specific asyn parameter.
+* custom ecmc plc-constants 
+* access to ecmcAsynPort object to add plugin specific asyn parameter.
 
 # Interface
 The interface is defined in the structure ecmcPluginData in ecmcPluginDefs.h:
