@@ -129,8 +129,6 @@ struct ecmcPluginData pluginDataDef = {
         .funcName = "adv_plugin_func_1",
         // Function description
         .funcDesc = "Multiply arg0 with arg1.",
-        // Number of arguments in the function prototytpe
-        .argCount = 2,
         /**
         * 7 different prototypes allowed (only doubles since reg in plc).
         * Only funcArg${argCount} func shall be assigned the rest set to NULL.
@@ -150,8 +148,6 @@ struct ecmcPluginData pluginDataDef = {
         .funcName = "adv_plugin_func_2",
         // Function description
         .funcDesc = "Multiply arg0, arg1 and arg2.",
-        // Number of arguments in the function prototytpe
-        .argCount = 3,
         /**
         * 7 different prototypes allowed (only doubles since reg in plc).
         * Only funcArg${argCount} func shall be assigned the rest set to NULL.
