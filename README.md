@@ -2,7 +2,7 @@ e3-ecmcPlugin_Advanced
 ======
 ESS Site-specific EPICS module : ecmcPlugin_Advanced
 
-Example illustrating a plugin for use with ecmc.
+Example illustrating how to implement plugins for use with ecmc (https://github.com/icshwi/ecmc).
 
 Shows how to implement:
 * callbacks 
@@ -44,8 +44,8 @@ All callbacks are optional. If the callbacks are not used then set the func poin
 
 Example:
 ```
-ecmcPluginData.destructFnc=NULL"
-ecmcPluginData.constructFnc=NULL"
+ecmcPluginData.destructFnc=NULL
+ecmcPluginData.constructFnc=NULL
 ...
 ```
 
@@ -127,8 +127,7 @@ struct ecmcOnePlcFunc {
   const char *funcDesc;
   /**
    * 7 different prototypes allowed (only doubles since reg in plc).
-   * Only funcArg${argCount} func shall be assigned the rest set to NULL
-   * funcArg${argCount}. These need to match. 
+   * Only one funcArg<argCount> func shall be assigned the rest set to NULL 
    **/
   double (*funcArg0)();
   double (*funcArg1)(double);
@@ -150,8 +149,7 @@ Example:
         .funcDesc = "Multiply arg0 with arg1.",
         /**
         * 7 different prototypes allowed (only doubles since reg in plc).
-        * Only funcArg${argCount} func shall be assigned the rest set to NULL.
-        * funcArg${argCount}. These need to match. 
+        * Only funcArg<argCount> one func shall be assigned the rest set to NULL.
         **/
         .funcArg0 = NULL,
         .funcArg1 = NULL,
@@ -184,6 +182,7 @@ Example:
 ```
 ## Dependencies:
 
+All needed headers are available in ecmc (https://github.com/icshwi/ecmc)
 ### Simple plugins 
 
 Only the "ecmcPluginDefs.h" header is needed.
@@ -204,7 +203,7 @@ Note: This define is needed in the plugin sources:
 ```
 #define ECMC_IS_PLUGIN
 ```
-## Plugininfo printout
+## Plugin info for ecmcPlugin_Advanced
 ```
  Plugin info: 
    Name                 = ecmcExamplePlugin
