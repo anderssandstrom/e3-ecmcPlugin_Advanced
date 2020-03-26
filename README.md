@@ -3,8 +3,8 @@ e3-ecmcPlugin_Advanced
 ESS Site-specific EPICS module : ecmcPlugin_Advanced
 
 Example illustrating a plugin for use with ecmc.
-Shows use of callbacks and implementation, custom ecmc plc-functions and how to access the
-ecmcAsynPort object.
+Shows use of callbacks and implementation, custom ecmc plc-functions, plc-constants and how to access the
+ecmcAsynPort object to add a plugin specific asyn parameter that is updating cyclicly.
 
 # Interface
 The interface is defined in the structure ecmcPluginData in ecmcPluginDefs.h:
@@ -12,6 +12,8 @@ The interface is defined in the structure ecmcPluginData in ecmcPluginDefs.h:
 struct ecmcPluginData {
   // Name 
   const char *name;
+  // Description
+  const char *desc;
   // Plugin version
   int version;
   // ECMC_PLUG_VERSION_MAGIC
@@ -26,8 +28,10 @@ struct ecmcPluginData {
   int (*realtimeExitFnc)(void);
   // Optional func that will be called each realtime cycle
   int (*realtimeFnc)(int);
-  // Allow max ECMC_PLUGIN_MAX_FUNC_COUNT custom plc functions
-  struct ecmcOnePlcFunc funcs[ECMC_PLUGIN_MAX_PLC_FUNC_COUNT];
+  // Allow max ECMC_PLUGIN_MAX_FUNC_COUNT custom functions
+  struct ecmcOnePlcFunc  funcs[ECMC_PLUGIN_MAX_PLC_FUNC_COUNT];
+  // Allow max ECMC_PLUGIN_MAX_PLC_CONST_COUNT custom constants
+  struct ecmcOnePlcConst consts[ECMC_PLUGIN_MAX_PLC_CONST_COUNT];
 };
 ```
 ## Callbacks:
@@ -38,9 +42,13 @@ If not used then set "ecmcPluginData.constructFnc=NULL".
 
 Return value: 0 for success or error code.
 
+In this example plugin only a printout is made in this callback.
+
 ### void destructFnc(), optional
 This callback is called once when the plugin is unloaded. This is a good place to put cleanup code needed by the plugin module.
 If not used then set "ecmcPluginData.destructFnc=NULL".
+
+In this example plugin only a printout is made in this callback.
 
 ### int realtimeFnc(int ecmcErrorId), optional
 This callback is called once in each realtime loop (sync to ecmc). This is a good place to put any cyclic processing needed by the plugin module.
@@ -49,6 +57,8 @@ If not used then set "ecmcPluginData.realtimeFnc=NULL".
 Parameters: ecmcErrorId: reflects the current errorstate of ecmc.
 
 Return value: 0 for success or error code.
+
+In this example a counter value is increased for each call and the coresponding asyn parameter is updated.
 
 ### int realtimeEnterFnc(void* ecmcRefs), optional
 This callback is called once just before ecmc enters realtime mode (starts rt-thread). This is a good place to make any prepartions needed before cyclic processing starts.
@@ -65,31 +75,38 @@ IMPORTANT! This structure is only valid the time between calls of "realtimeEnter
 
 Return value: 0 for success or error code.
 
+In this example a asyn parameter called "plugin.adv.counter" is registered. The ecmc realtime samplerate is also determined from the ecmcRefs
+
 ### int realtimeExitFnc(), optional
 This callback is called once just before ecmc exits realtime mode (exits rt-thread).
 If not used then set "ecmcPluginData.exitRealTimeFnc=NULL".
 
 Return value: 0 for success or error code.
 
+In this example plugin only a printout is made in this callback.
+
 ### Example:
 ```
+// Compile data for lib so ecmc now what to use
 struct ecmcPluginData pluginDataDef = {
   // Name 
   .name = "ecmcExamplePlugin",
+  // Description
+  .desc = "Advanced example with use of asynport obj.",
   // Plugin version
   .version = ECMC_EXAMPLE_PLUGIN_VERSION,
   // ECMC_PLUG_VERSION_MAGIC
   .ifVersion = ECMC_PLUG_VERSION_MAGIC, 
   // Optional construct func, called once at load. NULL if not definded.
-  .constructFnc = exampleConstruct,
+  .constructFnc = adv_exampleConstruct,
   // Optional destruct func, called once at unload. NULL if not definded.
-  .destructFnc = exampleDestruct,
+  .destructFnc = adv_exampleDestruct,
   // Optional func that will be called each rt cycle. NULL if not definded.
-  .realtimeFnc = exampleRealtime,
+  .realtimeFnc = adv_exampleRealtime,
   // Optional func that will be called once just before enter realtime mode
-  .realtimeEnterFnc = exampleEnterRT,
+  .realtimeEnterFnc = adv_exampleEnterRT,
   // Optional func that will be called once just before exit realtime mode
-  .realtimeExitFnc = exampleExitRT,
+  .realtimeExitFnc = adv_exampleExitRT,
 ...
 ...
 
@@ -100,6 +117,8 @@ Custom ecmc PLC-functions can be implemnted in plugins. Currentlly the interface
 struct ecmcOnePlcFunc {
   // Function name (this is the name you use in ecmc plc-code)
   const char *funcName;
+  // Function description
+  const char *funcDesc;
   // Number of arguments in the function prototytpe
   int argCount;
   /**
@@ -122,7 +141,9 @@ Example:
 .funcs[0] =      
       { /*----customPlcFunc1----*/
         // Function name (this is the name you use in ecmc plc-code)
-        .funcName = "ex_plugin_func_1",
+        .funcName = "adv_plugin_func_1",
+        // Function description
+        .funcDesc = "Multiply arg0 with arg1.",
         // Number of arguments in the function prototytpe
         .argCount = 2,
         /**
@@ -132,13 +153,12 @@ Example:
         **/
         .funcArg0 = NULL,
         .funcArg1 = NULL,
-        .funcArg2 = customPlcFunc1, // Func 1 has 2 args
+        .funcArg2 = adv_customPlcFunc1, // Func 1 has 2 args
         .funcArg3 = NULL,
         .funcArg4 = NULL,
-        .funcArg6 = NULL,
+        .funcArg5 = NULL,
         .funcArg6 = NULL
       },
-  
 ```
 Note: Only the funcArg${argCount} pointer will be used, so set the rest to NULL.
 
