@@ -15,6 +15,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif  // ifdef __cplusplus
+
 // get ecmc rt sample rate from ecmcRefs
 double getSampleRate(void* ecmcRefs);
 // get ecmcAsynPort from ecmcRefs

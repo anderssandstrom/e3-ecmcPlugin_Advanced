@@ -56,19 +56,20 @@ int initAsyn(void* asynPort) {
 
   // Add a dummy counter that incraeses one for each rt cycle
   paramCount = ecmcAsynPort->addNewAvailParam(
-                                        "plugin.adv.counter",
-                                         asynParamInt32,
-                                         (uint8_t *)&(counter),
-                                         sizeof(counter),
-                                         ECMC_EC_S32,
-                                         0);
+                                        "plugin.adv.counter",  // name
+                                         asynParamInt32,       // asyn type 
+                                         (uint8_t *)&(counter),// pointer to data
+                                         sizeof(counter),      // size of data
+                                         ECMC_EC_S32,          // ecmc data type
+                                         0);                   // die if fail
   if(!paramCount) {
     printf("Error: ecmcPlugin_Advanced: Failed to create asyn param \"plugin.adv.counter\".");
     return ECMC_ERROR_ASYN_PARAM_FAIL;
   }
-  paramCount->addSupportedAsynType(asynParamInt32);
-  paramCount->allowWriteToEcmc(false);
-  paramCount->refreshParam(1);
+  paramCount->addSupportedAsynType(asynParamInt32);  // Only allw records of this type 
+  paramCount->allowWriteToEcmc(false);  // read only
+  paramCount->refreshParam(1); // read once into asyn param lib
+  ecmcAsynPort->callParamCallbacks(ECMC_ASYN_DEFAULT_LIST, ECMC_ASYN_DEFAULT_ADDR);
   return 0;
 }
 
@@ -77,5 +78,6 @@ void increaseCounter(){
   counter++;
   if(paramCount){
     paramCount->refreshParamRT(0);
+    // "callParamCallbacks" are handled in ecmc rt thread so don't call
   }
 }
