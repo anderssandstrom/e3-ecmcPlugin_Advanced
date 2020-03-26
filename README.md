@@ -3,8 +3,12 @@ e3-ecmcPlugin_Advanced
 ESS Site-specific EPICS module : ecmcPlugin_Advanced
 
 Example illustrating a plugin for use with ecmc.
-Shows use of callbacks and implementation, custom ecmc plc-functions, plc-constants and how to access the
-ecmcAsynPort object to add a plugin specific asyn parameter that is updating cyclicly.
+
+Shows how to implement:
+* callbacks 
+* custom ecmc plc-functions
+* custom plc-constants 
+* access to ecmcAsynPort object to add a plugin specific asyn parameter.
 
 # Interface
 The interface is defined in the structure ecmcPluginData in ecmcPluginDefs.h:
