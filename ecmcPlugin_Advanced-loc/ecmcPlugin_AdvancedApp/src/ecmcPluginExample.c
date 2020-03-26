@@ -53,6 +53,8 @@ void adv_exampleDestruct(void)
 int adv_exampleRealtime(int ecmcError)
 {
   printf("adv_exampleRealtime...\n");
+  //Update asynparam counter
+  increaseCounter();
   lastEcmcError = ecmcError;
   return 0;
 }
@@ -63,12 +65,16 @@ int adv_exampleRealtime(int ecmcError)
  *  ecmcRefs is only valid between "exampleEnterRT()" and "exampleExitRT()"
  **/
 int adv_exampleEnterRT(void* ecmcRefs){
-  // Determine ecmc sample rate
+  
+  // Determine ecmc sample rate (just for demo)
   ecmcSampleRate = getSampleRate(ecmcRefs);
   printf("Ecmc sample rate is: %lf ms",ecmcSampleRate);
 
-  // Use ecmcAsynPort
+  // Use ecmcAsynPort (just for demo)
   ecmcAsynPort = getAsynPort(ecmcRefs);
+
+  // init asyn param counter
+  initAsyn(ecmcAsynPort);
   return 0;
 }
 
