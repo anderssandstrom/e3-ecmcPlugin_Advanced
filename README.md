@@ -123,8 +123,6 @@ struct ecmcOnePlcFunc {
   const char *funcName;
   // Function description
   const char *funcDesc;
-  // Number of arguments in the function prototytpe
-  int argCount;
   /**
    * 7 different prototypes allowed (only doubles since reg in plc).
    * Only funcArg${argCount} func shall be assigned the rest set to NULL
@@ -148,8 +146,6 @@ Example:
         .funcName = "adv_plugin_func_1",
         // Function description
         .funcDesc = "Multiply arg0 with arg1.",
-        // Number of arguments in the function prototytpe
-        .argCount = 2,
         /**
         * 7 different prototypes allowed (only doubles since reg in plc).
         * Only funcArg${argCount} func shall be assigned the rest set to NULL.
@@ -164,7 +160,7 @@ Example:
         .funcArg6 = NULL
       },
 ```
-Note: Only the funcArg${argCount} pointer will be used, so set the rest to NULL.
+Note: Only the first non NULL function will be used (starting from funcArg0...)
 
 ## PLC constants
 Custom ecmc PLC-constants can be implemented in plugins. Currentlly the interface supports implementation of up to 64 plc constants. Each plc constant needs to be defined by the struct "ecmcOnePlcFunc":
@@ -225,7 +221,7 @@ Note: This define is needed in the plugin sources:
      funcs[00]:
        Name       = "adv_plugin_func_1(arg0, arg1);"
        Desc       = Multiply arg0 with arg1.
-       Arg count  = 2
+       Arg count  = 2  
        func       = @0x7fac4353d170
      funcs[01]:
        Name       = "adv_plugin_func_2(arg0, arg1, arg2);"
