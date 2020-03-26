@@ -162,23 +162,6 @@ Example:
 ```
 Note: Only the funcArg${argCount} pointer will be used, so set the rest to NULL.
 
-## Example: Module added asynparam linked to record
-```
-camonitor IOC_TEST:Plugin-Adv-Counter
-IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:21.535547 23  
-IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:21.630954 24  
-IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:21.740799 25  
-IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:21.838110 26  
-IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:21.930354 27  
-IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:22.034919 28  
-IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:22.130358 29  
-IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:22.234041 30  
-IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:22.334133 31  
-IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:22.434937 32  
-IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:22.530212 33  
-IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:22.634437 34  
-IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:22.734606 35  
-```
 ## Dependencies:
 
 ### Simple plugins 
@@ -200,4 +183,22 @@ When using the "void* ecmcRefs" param (cast to ecmcPluginDataRefs)in the "realti
 Note: This define is needed in the plugin sources:
 ```
 #define ECMC_IS_PLUGIN
+```
+
+## This Example: Module added asynparam linked to record IOC_TEST:Plugin-Adv-Counter
+```
+camonitor IOC_TEST:Plugin-Adv-Counter
+IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:21.535547 23  
+IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:21.630954 24  
+IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:21.740799 25  
+IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:21.838110 26  
+IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:21.930354 27  
+IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:22.034919 28  
+IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:22.130358 29  
+IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:22.234041 30  
+IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:22.334133 31  
+IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:22.434937 32  
+IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:22.530212 33  
+IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:22.634437 34  
+IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:22.734606 35  
 ```
