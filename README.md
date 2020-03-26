@@ -116,7 +116,7 @@ struct ecmcPluginData pluginDataDef = {
 
 ```
 ## PLC functions:
-Custom ecmc PLC-functions can be implemnted in plugins. Currentlly the interface supports implementation of up to 32 plc functions. Each plc function needs to be defined by the struct "ecmcOnePlcFunc":
+Custom ecmc PLC-functions can be implemented in plugins. Currentlly the interface supports implementation of up to 64 plc functions. Each plc function needs to be defined by the struct "ecmcOnePlcFunc":
 ```
 struct ecmcOnePlcFunc {
   // Function name (this is the name you use in ecmc plc-code)
@@ -166,6 +166,24 @@ Example:
 ```
 Note: Only the funcArg${argCount} pointer will be used, so set the rest to NULL.
 
+## PLC constants
+Custom ecmc PLC-constants can be implemented in plugins. Currentlly the interface supports implementation of up to 64 plc constants. Each plc constant needs to be defined by the struct "ecmcOnePlcFunc":
+```
+struct ecmcOnePlcConst{
+  const char *constName;
+  const char *constDesc;
+  double      constValue;
+};
+
+```
+Example:
+```
+.consts[0] = {
+        .constName = "adv_CONST_1",
+        .constDesc = "Test constant \"adv_CONST_1\" = 1.234567890",
+        .constValue = 1.234567890,
+      },
+```
 ## Dependencies:
 
 ### Simple plugins 
@@ -188,8 +206,42 @@ Note: This define is needed in the plugin sources:
 ```
 #define ECMC_IS_PLUGIN
 ```
+## Plugininfo printout
+```
+ Plugin info: 
+   Name                 = ecmcExamplePlugin
+   Description          = Advanced example with use of asynport obj.
+   Version              = 1
+   Interface version    = 512 (ecmc = 512)
+       max plc funcs    = 64
+       max plc consts   = 64
+   Construct func       = @0x7fac4353d190
+   Enter realtime func  = @0x7fac4353d200
+   Exit realtime func   = @0x7fac4353d1c0
+   Realtime func        = @0x7fac4353d1e0
+   Destruct func        = @0x7fac4353d1b0
+   dlhandle             = @0x182e580
+   Plc functions:
+     funcs[00]:
+       Name       = "adv_plugin_func_1(arg0, arg1);"
+       Desc       = Multiply arg0 with arg1.
+       Arg count  = 2
+       func       = @0x7fac4353d170
+     funcs[01]:
+       Name       = "adv_plugin_func_2(arg0, arg1, arg2);"
+       Desc       = Multiply arg0, arg1 and arg2.
+       Arg count  = 3
+       func       = @0x7fac4353d180
+   Plc constants:
+     consts[00]:
+       Name     = "adv_CONST_1" = 1.235
+       Desc     = Test constant "adv_CONST_1" = 1.234567890
+     consts[01]:
+       Name     = "adv_CONST_2" = 9.877
+       Desc     = Test constant "adv_CONST_2" = 9.876543210 
+```
 
-## This Example: Module added asynparam linked to record IOC_TEST:Plugin-Adv-Counter
+## Access to asyn parameter (linked to record IOC_TEST:Plugin-Adv-Counter)
 ```
 camonitor IOC_TEST:Plugin-Adv-Counter
 IOC_TEST:Plugin-Adv-Counter    2020-03-26 15:45:21.535547 23  
