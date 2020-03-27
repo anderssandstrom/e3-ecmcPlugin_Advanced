@@ -163,7 +163,7 @@ Example:
 Note: Only the first non NULL function will be used (starting from funcArg0...)
 
 ## PLC constants
-Custom ecmc PLC-constants can be implemented in plugins. Currentlly the interface supports implementation of up to 64 plc constants. Each plc constant needs to be defined by the struct "ecmcOnePlcFunc":
+Custom ecmc PLC-constants can be implemented in plugins. Currentlly the interface supports implementation of up to 64 plc constants. Each plc constant needs to be defined by the struct "ecmcOnePlcConst":
 ```
 struct ecmcOnePlcConst{
   const char *constName;
