@@ -25,11 +25,13 @@ extern "C" {
 #include "ecmcPluginDefs.h"
 #include "ecmcAdvanced.h"
 
+#define ECMC_PLUGIN_DEMO_DBG_OPTION_CMD "DBG_PRINT"
 
 static int    lastEcmcError  = 0;
 static double ecmcSampleRate = 0;
 static void*  ecmcAsynPort   = NULL;
 static char*  confStr        = NULL;
+static int    dbgModeOption  = 0;
 /** Optional. 
  *  Will be called once after successfull load into ecmc.
  *  Return value other than 0 will be considered error.
@@ -37,8 +39,16 @@ static char*  confStr        = NULL;
  **/
 int adv_exampleConstruct(char * configStr)
 {
-  printf("adv_exampleConstruct with configStr=\"%s\"...\n",configStr);
   confStr = strdup(configStr);
+  //Only one option defined "DBG_PRINT=" (no need for loop)
+  int tempValue=0;
+  int nvals = sscanf(confStr, ECMC_PLUGIN_DEMO_DBG_OPTION_CMD"=%d",&tempValue);
+  if (nvals == 1) {
+    dbgModeOption = tempValue;
+  }
+  if(dbgModeOption)
+    printf("adv_exampleConstruct with configStr=\"%s\"...\n",configStr);
+  
   return 0;
 }
 
@@ -47,7 +57,9 @@ int adv_exampleConstruct(char * configStr)
  **/
 void adv_exampleDestruct(void)
 {
-  printf("adv_exampleDestruct...\n");
+  if(dbgModeOption)
+    printf("adv_exampleDestruct...\n");
+  
   if(confStr){
     free(confStr);
   }
@@ -61,7 +73,9 @@ void adv_exampleDestruct(void)
  **/
 int adv_exampleRealtime(int ecmcError)
 {
-  printf("adv_exampleRealtime...\n");
+  if(dbgModeOption)
+    printf("adv_exampleRealtime...\n");
+  
   //Update asynparam counter
   increaseCounter();
   lastEcmcError = ecmcError;
@@ -77,7 +91,8 @@ int adv_exampleEnterRT(void* ecmcRefs){
   
   // Determine ecmc sample rate (just for demo)
   ecmcSampleRate = getSampleRate(ecmcRefs);
-  printf("Ecmc sample rate is: %lf ms",ecmcSampleRate);
+  if(dbgModeOption)
+    printf("Ecmc sample rate is: %lf ms",ecmcSampleRate);
 
   // Use ecmcAsynPort (just for demo)
   ecmcAsynPort = getAsynPort(ecmcRefs);
@@ -92,7 +107,9 @@ int adv_exampleEnterRT(void* ecmcRefs){
  *  Return value other than 0 will be considered error.
  **/
 int adv_exampleExitRT(void){
-  printf("adv_exampleExitRT...\n");
+  if(dbgModeOption)
+    printf("adv_exampleExitRT...\n");
+  
   return 0;
 }
 
@@ -110,12 +127,14 @@ double adv_customPlcFunc2(double arg1, double arg2, double arg3)
   return arg1 * arg2 * arg3;
 }
 
-// Register data for plugin so ecmc now what to use
+// Register data for plugin so ecmc know what to use
 struct ecmcPluginData pluginDataDef = {
   // Name 
   .name = "ecmcExamplePlugin",
   // Description
   .desc = "Advanced example with use of asynport obj.",
+  // Option description
+  .optionDesc = ECMC_PLUGIN_DEMO_DBG_OPTION_CMD"=1/0 : Enables/disables printouts from plugin.",
   // Plugin version
   .version = ECMC_EXAMPLE_PLUGIN_VERSION,
   // ECMC_PLUG_VERSION_MAGIC
@@ -185,7 +204,7 @@ struct ecmcPluginData pluginDataDef = {
         .constDesc = "Test constant \"adv_CONST_1\" = 1.234567890",
         .constValue = 1.234567890,
       },
-   .consts[1] = {
+  .consts[1] = {
         .constName = "adv_CONST_2",
         .constDesc = "Test constant \"adv_CONST_2\" = 9.876543210",
         .constValue = 9.876543210,
