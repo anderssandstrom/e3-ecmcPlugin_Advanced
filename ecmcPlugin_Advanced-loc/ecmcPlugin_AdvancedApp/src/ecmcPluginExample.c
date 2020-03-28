@@ -26,13 +26,21 @@ extern "C" {
 #include "ecmcAdvanced.h"
 #include "ecmcPLC.h"
 
-#define ECMC_PLUGIN_DEMO_DBG_OPTION_CMD "DBG_PRINT"
+#define ECMC_PLUGIN_DBG_OPTION_CMD "DBG_PRINT"
+
+#define PRINT_IF_DBG_MODE(fmt, ...)       \
+  {                                       \
+    if(dbgModeOption){                    \
+      printf(fmt, ## __VA_ARGS__);        \
+    }                                     \
+  }                                       \
 
 static int    lastEcmcError  = 0;
 static double ecmcSampleRate = 0;
 static void*  ecmcAsynPort   = NULL;
 static char*  confStr        = NULL;
 static int    dbgModeOption  = 0;
+
 /** Optional. 
  *  Will be called once after successfull load into ecmc.
  *  Return value other than 0 will be considered error.
@@ -43,12 +51,12 @@ int adv_exampleConstruct(char * configStr)
   confStr = strdup(configStr);
   //Only one option defined "DBG_PRINT=" (no need for loop)
   int tempValue=0;
-  int nvals = sscanf(confStr, ECMC_PLUGIN_DEMO_DBG_OPTION_CMD"=%d",&tempValue);
+  int nvals = sscanf(confStr, ECMC_PLUGIN_DBG_OPTION_CMD"=%d",&tempValue);
   if (nvals == 1) {
     dbgModeOption = tempValue;
   }
-  if(dbgModeOption)
-    printf("adv_exampleConstruct with configStr=\"%s\"...\n",configStr);
+  
+  PRINT_IF_DBG_MODE("%s/%s:%d: ConfigStr=\"%s\"...\n",__FILE__, __FUNCTION__, __LINE__,configStr);
   
   return 0;
 }
@@ -58,8 +66,7 @@ int adv_exampleConstruct(char * configStr)
  **/
 void adv_exampleDestruct(void)
 {
-  if(dbgModeOption)
-    printf("adv_exampleDestruct...\n");
+  PRINT_IF_DBG_MODE("%s/%s:%d...\n",__FILE__, __FUNCTION__, __LINE__);
   
   if(confStr){
     free(confStr);
@@ -78,8 +85,7 @@ int adv_exampleRealtime(int ecmcError)
   int plcEnabled = 0;
   getPLCEnable(0,&plcEnabled);
 
-  if(dbgModeOption)
-    printf("adv_exampleRealtime...plc0.enabled=%d\n",plcEnabled);
+  PRINT_IF_DBG_MODE("%s/%s:%d: plc0.enabled=%d\n",__FILE__, __FUNCTION__, __LINE__,plcEnabled);
   
   //Update asynparam counter
   increaseCounter();
@@ -96,8 +102,7 @@ int adv_exampleEnterRT(void* ecmcRefs){
   
   // Determine ecmc sample rate (just for demo)
   ecmcSampleRate = getSampleRate(ecmcRefs);
-  if(dbgModeOption)
-    printf("Ecmc sample rate is: %lf ms",ecmcSampleRate);
+  PRINT_IF_DBG_MODE("%s/%s:%d Ecmc sample rate is: %lf ms\n",__FILE__, __FUNCTION__, __LINE__,ecmcSampleRate);
 
   // Use ecmcAsynPort (just for demo)
   ecmcAsynPort = getAsynPort(ecmcRefs);
@@ -112,23 +117,21 @@ int adv_exampleEnterRT(void* ecmcRefs){
  *  Return value other than 0 will be considered error.
  **/
 int adv_exampleExitRT(void){
-  if(dbgModeOption)
-    printf("adv_exampleExitRT...\n");
-  
+  PRINT_IF_DBG_MODE("%s/%s:%d...\n",__FILE__, __FUNCTION__, __LINE__);
   return 0;
 }
 
 /** Optional plc function 1*/
 double adv_customPlcFunc1(double arg1, double arg2)
 {
-  //printf("adv_customPlcFunc1 %lf, %lf.\n",arg1,arg2);
+  PRINT_IF_DBG_MODE("%s/%s:%d...\n",__FILE__, __FUNCTION__, __LINE__);
   return arg1 * arg2;
 }
 
 /** Optional plc function 2*/
 double adv_customPlcFunc2(double arg1, double arg2, double arg3)
 {
-  //printf("adv_customPlcFunc2 %lf, %lf, %lf.\n",arg1,arg2,arg3);
+  PRINT_IF_DBG_MODE("%s/%s:%d...\n",__FILE__, __FUNCTION__, __LINE__);
   return arg1 * arg2 * arg3;
 }
 
@@ -139,7 +142,7 @@ struct ecmcPluginData pluginDataDef = {
   // Description
   .desc = "Advanced example with use of asynport obj.",
   // Option description
-  .optionDesc = ECMC_PLUGIN_DEMO_DBG_OPTION_CMD"=1/0 : Enables/disables printouts from plugin.",
+  .optionDesc = ECMC_PLUGIN_DBG_OPTION_CMD"=1/0 : Enables/disables printouts from plugin.",
   // Plugin version
   .version = ECMC_EXAMPLE_PLUGIN_VERSION,
   // ECMC_PLUG_VERSION_MAGIC
