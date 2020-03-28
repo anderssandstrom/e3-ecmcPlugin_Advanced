@@ -24,6 +24,7 @@ extern "C" {
 
 #include "ecmcPluginDefs.h"
 #include "ecmcAdvanced.h"
+#include "ecmcPLC.h"
 
 #define ECMC_PLUGIN_DEMO_DBG_OPTION_CMD "DBG_PRINT"
 
@@ -73,8 +74,12 @@ void adv_exampleDestruct(void)
  **/
 int adv_exampleRealtime(int ecmcError)
 {
+  // Check if plc 0 is enabled.. Just to show something with the ecmc headers
+  int plcEnabled = 0;
+  getPLCEnable(0,&plcEnabled);
+
   if(dbgModeOption)
-    printf("adv_exampleRealtime...\n");
+    printf("adv_exampleRealtime...plc0.enabled=%d\n",plcEnabled);
   
   //Update asynparam counter
   increaseCounter();
