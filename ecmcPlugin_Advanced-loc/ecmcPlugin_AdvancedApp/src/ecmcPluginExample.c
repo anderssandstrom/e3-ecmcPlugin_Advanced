@@ -19,20 +19,26 @@ extern "C" {
 #endif  // ifdef __cplusplus
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "ecmcPluginDefs.h"
 #include "ecmcAdvanced.h"
+
 
 static int    lastEcmcError  = 0;
 static double ecmcSampleRate = 0;
 static void*  ecmcAsynPort   = NULL;
-
+static char*  confStr        = NULL;
 /** Optional. 
  *  Will be called once just before ecmc goes into realtime mode.
  *  Return value other than 0 will be considered error.
+ *  configStr can be used for configuration parameters.
  **/
-int adv_exampleConstruct(void)
+int adv_exampleConstruct(char * configStr)
 {
-  printf("adv_exampleConstruct...\n");
+  printf("adv_exampleConstruct with configStr=\"%s\"...\n",configStr);
+  confStr = strdup(configStr);
   return 0;
 }
 
@@ -42,6 +48,9 @@ int adv_exampleConstruct(void)
 void adv_exampleDestruct(void)
 {
   printf("adv_exampleDestruct...\n");
+  if(confStr){
+    free(confStr);
+  }
 }
 
 /** Optional function.
@@ -122,7 +131,7 @@ struct ecmcPluginData pluginDataDef = {
   // Optional func that will be called once just before exit realtime mode
   .realtimeExitFnc = adv_exampleExitRT,
 
-  // Allow max ECMC_PLUGIN_MAX_FUNC_COUNT custom plc funcs
+  // Allow max s custom plc funcs
   .funcs[0] =      
       { /*----customPlcFunc1----*/
         // Function name (this is the name you use in ecmc plc-code)
@@ -130,17 +139,20 @@ struct ecmcPluginData pluginDataDef = {
         // Function description
         .funcDesc = "Multiply arg0 with arg1.",
         /**
-        * 7 different prototypes allowed (only doubles since reg in plc).
-        * Only funcArg${argCount} func shall be assigned the rest set to NULL.
-        * funcArg${argCount}. These need to match. 
+        * 11 different prototypes allowed (only doubles since reg in plc).
+        * Only one funcArg<argCount> func shall be assigned the rest set to NULL.
         **/
-        .funcArg0 = NULL,
-        .funcArg1 = NULL,
-        .funcArg2 = adv_customPlcFunc1, // Func 1 has 2 args
-        .funcArg3 = NULL,
-        .funcArg4 = NULL,
-        .funcArg5 = NULL,
-        .funcArg6 = NULL
+        .funcArg0  = NULL,
+        .funcArg1  = NULL,
+        .funcArg2  = adv_customPlcFunc1, // Func 1 has 2 args
+        .funcArg3  = NULL,
+        .funcArg4  = NULL,
+        .funcArg5  = NULL,
+        .funcArg6  = NULL,
+        .funcArg7  = NULL,
+        .funcArg8  = NULL,
+        .funcArg9  = NULL,
+        .funcArg10 = NULL
       },
   .funcs[1] =
       { /*----customPlcFunc2----*/
@@ -149,17 +161,20 @@ struct ecmcPluginData pluginDataDef = {
         // Function description
         .funcDesc = "Multiply arg0, arg1 and arg2.",
         /**
-        * 7 different prototypes allowed (only doubles since reg in plc).
+        * 11 different prototypes allowed (only doubles since reg in plc).
         * Only funcArg${argCount} func shall be assigned the rest set to NULL.
-        * funcArg${argCount}. These need to match. 
         **/
-        .funcArg0 = NULL,
-        .funcArg1 = NULL,
-        .funcArg2 = NULL,
-        .funcArg3 = adv_customPlcFunc2, // Func 2 has 3 args
-        .funcArg4 = NULL,
-        .funcArg5 = NULL,
-        .funcArg6 = NULL
+        .funcArg0  = NULL,
+        .funcArg1  = NULL,
+        .funcArg2  = NULL,
+        .funcArg3  = adv_customPlcFunc2, // Func 2 has 3 args
+        .funcArg4  = NULL,
+        .funcArg5  = NULL,
+        .funcArg6  = NULL,
+        .funcArg7  = NULL,
+        .funcArg8  = NULL,
+        .funcArg9  = NULL,
+        .funcArg10 = NULL
       },
   .funcs[2] = {0}, //last element set all to zero..
 
