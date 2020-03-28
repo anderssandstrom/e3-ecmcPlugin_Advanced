@@ -31,7 +31,7 @@ static double ecmcSampleRate = 0;
 static void*  ecmcAsynPort   = NULL;
 static char*  confStr        = NULL;
 /** Optional. 
- *  Will be called once just before ecmc goes into realtime mode.
+ *  Will be called once after successfull load into ecmc.
  *  Return value other than 0 will be considered error.
  *  configStr can be used for configuration parameters.
  **/
@@ -57,7 +57,7 @@ void adv_exampleDestruct(void)
  *  Will be called each realtime cycle if definded
  *  ecmcError: Error code of ecmc. Makes it posible for 
  *  this plugin to react on ecmc errors
- *  Return value other than 0 will be considered error.
+ *  Return value other than 0 will be considered to be an error code in ecmc.
  **/
 int adv_exampleRealtime(int ecmcError)
 {
@@ -71,7 +71,7 @@ int adv_exampleRealtime(int ecmcError)
 /** Optional function.
  *  Will be called once just before going to realtime mode
  *  Return value other than 0 will be considered error.
- *  ecmcRefs is only valid between "exampleEnterRT()" and "exampleExitRT()"
+ *  ecmcRefs contains pointer to ecmcAsynPort object and ecmc sample rate
  **/
 int adv_exampleEnterRT(void* ecmcRefs){
   
@@ -96,21 +96,21 @@ int adv_exampleExitRT(void){
   return 0;
 }
 
-/** Optional plc function*/
+/** Optional plc function 1*/
 double adv_customPlcFunc1(double arg1, double arg2)
 {
   //printf("adv_customPlcFunc1 %lf, %lf.\n",arg1,arg2);
   return arg1 * arg2;
 }
 
-/** Optional plc function*/
+/** Optional plc function 2*/
 double adv_customPlcFunc2(double arg1, double arg2, double arg3)
 {
   //printf("adv_customPlcFunc2 %lf, %lf, %lf.\n",arg1,arg2,arg3);
   return arg1 * arg2 * arg3;
 }
 
-// Compile data for lib so ecmc now what to use
+// Register data for plugin so ecmc now what to use
 struct ecmcPluginData pluginDataDef = {
   // Name 
   .name = "ecmcExamplePlugin",
@@ -176,10 +176,10 @@ struct ecmcPluginData pluginDataDef = {
         .funcArg9  = NULL,
         .funcArg10 = NULL
       },
-  .funcs[2] = {0}, //last element set all to zero..
+  .funcs[2] = {0}, // last element set all to zero..
 
   /** Plugin specific constants (add prefix to not risc collide with 
-   * other modules) */
+   *  names from other modules) */
   .consts[0] = {
         .constName = "adv_CONST_1",
         .constDesc = "Test constant \"adv_CONST_1\" = 1.234567890",
@@ -190,7 +190,7 @@ struct ecmcPluginData pluginDataDef = {
         .constDesc = "Test constant \"adv_CONST_2\" = 9.876543210",
         .constValue = 9.876543210,
       },
-  .consts[2] = {0},
+  .consts[2] = {0}, // last element set all to zero..
 };
 
 ecmc_plugin_register(pluginDataDef);
