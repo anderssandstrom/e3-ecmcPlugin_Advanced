@@ -62,7 +62,9 @@ This callback is called once when the plugin is unloaded. This is a good place t
 In this example plugin only a printout is made in this callback.
 
 ### int realtimeFnc(int ecmcErrorId), optional
-This callback is called once in each realtime loop (sync to ecmc). This is a good place to put any cyclic processing needed by the plugin module.
+This callback is called once in each realtime loop (sync to ecmc). This is a good place to put any cyclic processing needed by the plugin module. 
+
+NOTE: This callback is executed by ecmc realtime thread. Take measures to stay as short time as possible in this function. If lots of processing is needed a separate worker thread might be a solution.
 
 Parameters: ecmcErrorId: reflects the current errorstate of ecmc.
 
