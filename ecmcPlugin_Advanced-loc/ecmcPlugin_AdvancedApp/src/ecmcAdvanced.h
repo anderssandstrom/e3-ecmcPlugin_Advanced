@@ -16,12 +16,12 @@
 extern "C" {
 #endif  // ifdef __cplusplus
 
-// get ecmc rt sample rate from ecmcRefs
-double getSampleRate(void* ecmcRefs);
-// get ecmcAsynPort from ecmcRefs
-void*  getAsynPort(void* ecmcRefs);
+// get ecmc rt sample rate from ecmcPluginClient.h funcs
+double getSampleRate();
+// get ecmcAsynPort from ecmcPluginClient.h funcs
+void*  getAsynPort();
 // register a dummy asyn parameter "plugin.adv.counter"
-int    initAsyn(void* asynPort);
+int    initAsyn();
 // increase value of counter and refresh asyn param
 void   increaseCounter();
 

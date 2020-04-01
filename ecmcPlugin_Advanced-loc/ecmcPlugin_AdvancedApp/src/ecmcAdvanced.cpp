@@ -18,37 +18,29 @@
 #define ECMC_ERROR_ASYNPORT_NULL 1
 #define ECMC_ERROR_ASYN_PARAM_FAIL 2
 
-#include "ecmcPluginDataRefs.h"
 #include "ecmcAdvanced.h"
+#include "ecmcPluginClient.h"
+#include "ecmcAsynPortDriver.h"
 
 // Vars
 static int counter = 0;
 static ecmcAsynDataItem *paramCount = NULL;
 
-// get ecmc rt sample rate from ecmcRefs
-double getSampleRate(void* ecmcRefs) {
-  if(ecmcRefs) {
-    ecmcPluginDataRefs* dataFromEcmc = (ecmcPluginDataRefs*)ecmcRefs;
-    // call report()!    
-    return dataFromEcmc->sampleTimeMS;
-  }
-  return -1;
+// Use ecmcPluginClient.h interface
+double getSampleRate() {
+    
+  return getEcmcSampleRate();
 }
 
-// Demo simple use of asynPort. Most ecmc data can be accessed from asynPort 
-void* getAsynPort(void* ecmcRefs) {
-    
-  if(ecmcRefs) {
-    ecmcPluginDataRefs* dataFromEcmc = (ecmcPluginDataRefs*)ecmcRefs;    
-    return dataFromEcmc->ecmcAsynPort;
-  }
-  return NULL;
+// Use ecmcPluginClient.h interface
+void* getAsynPort() {
+  return getEcmcAsynPortDriver();
 }
 
 // register a dummy asyn parameter "plugin.adv.counter"
-int initAsyn(void* asynPort) {
+int initAsyn() {
   
-  ecmcAsynPortDriver *ecmcAsynPort = (ecmcAsynPortDriver*)asynPort;
+  ecmcAsynPortDriver *ecmcAsynPort = (ecmcAsynPortDriver *)getEcmcAsynPortDriver();
   if(!ecmcAsynPort) {
     printf("Error: ecmcPlugin_Advanced: ecmcAsynPortDriver NULL.");
     return ECMC_ERROR_ASYNPORT_NULL;
@@ -67,7 +59,7 @@ int initAsyn(void* asynPort) {
     return ECMC_ERROR_ASYN_PARAM_FAIL;
   }
   paramCount->addSupportedAsynType(asynParamInt32);  // Only allw records of this type 
-  paramCount->allowWriteToEcmc(false);  // read only
+  paramCount->setAllowWriteToEcmc(false);  // read only
   paramCount->refreshParam(1); // read once into asyn param lib
   ecmcAsynPort->callParamCallbacks(ECMC_ASYN_DEFAULT_LIST, ECMC_ASYN_DEFAULT_ADDR);
   return 0;

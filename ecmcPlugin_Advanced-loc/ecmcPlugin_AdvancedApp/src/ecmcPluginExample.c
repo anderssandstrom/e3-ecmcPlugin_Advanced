@@ -57,6 +57,15 @@ int adv_exampleConstruct(char * configStr)
   }
   
   PRINT_IF_DBG_MODE("%s/%s:%d: ConfigStr=\"%s\"...\n",__FILE__, __FUNCTION__, __LINE__,configStr);
+  // Determine ecmc sample rate (just for demo)
+  ecmcSampleRate = getSampleRate();
+  PRINT_IF_DBG_MODE("%s/%s:%d Ecmc sample rate is: %lf ms\n",__FILE__, __FUNCTION__, __LINE__,ecmcSampleRate);
+
+  // Use ecmcAsynPort (just for demo)
+  ecmcAsynPort = getAsynPort();
+
+  // init asyn param counter
+  initAsyn(ecmcAsynPort);
   
   return 0;
 }
@@ -96,19 +105,8 @@ int adv_exampleRealtime(int ecmcError)
 /** Optional function.
  *  Will be called once just before going to realtime mode
  *  Return value other than 0 will be considered error.
- *  ecmcRefs contains pointer to ecmcAsynPort object and ecmc sample rate
  **/
-int adv_exampleEnterRT(void* ecmcRefs){
-  
-  // Determine ecmc sample rate (just for demo)
-  ecmcSampleRate = getSampleRate(ecmcRefs);
-  PRINT_IF_DBG_MODE("%s/%s:%d Ecmc sample rate is: %lf ms\n",__FILE__, __FUNCTION__, __LINE__,ecmcSampleRate);
-
-  // Use ecmcAsynPort (just for demo)
-  ecmcAsynPort = getAsynPort(ecmcRefs);
-
-  // init asyn param counter
-  initAsyn(ecmcAsynPort);
+int adv_exampleEnterRT(){
   return 0;
 }
 
