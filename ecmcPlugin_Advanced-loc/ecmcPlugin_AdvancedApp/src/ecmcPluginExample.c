@@ -135,6 +135,8 @@ double adv_customPlcFunc2(double arg1, double arg2, double arg3)
 
 // Register data for plugin so ecmc know what to use
 struct ecmcPluginData pluginDataDef = {
+  // Allways use ECMC_PLUG_VERSION_MAGIC
+  .ifVersion = ECMC_PLUG_VERSION_MAGIC, 
   // Name 
   .name = "ecmcExamplePlugin",
   // Description
@@ -143,8 +145,6 @@ struct ecmcPluginData pluginDataDef = {
   .optionDesc = ECMC_PLUGIN_DBG_OPTION_CMD"=1/0 : Enables/disables printouts from plugin.",
   // Plugin version
   .version = ECMC_EXAMPLE_PLUGIN_VERSION,
-  // ECMC_PLUG_VERSION_MAGIC
-  .ifVersion = ECMC_PLUG_VERSION_MAGIC, 
   // Optional construct func, called once at load. NULL if not definded.
   .constructFnc = adv_exampleConstruct,
   // Optional destruct func, called once at unload. NULL if not definded.
