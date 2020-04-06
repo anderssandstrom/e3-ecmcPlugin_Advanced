@@ -14,6 +14,12 @@
 #define ECMC_IS_PLUGIN
 #define ECMC_EXAMPLE_PLUGIN_VERSION 1
 
+// only allow to load once
+#define ECMC_PLUGIN_ALLOW_MULTI_LOAD 0
+
+// Error codes
+#define ECMC_PLUGIN_ERROR_ALREADY_LOADED 1
+
 #ifdef __cplusplus
 extern "C" {
 #endif  // ifdef __cplusplus
@@ -40,6 +46,7 @@ static double ecmcSampleRate = 0;
 static void*  ecmcAsynPort   = NULL;
 static char*  confStr        = NULL;
 static int    dbgModeOption  = 0;
+static int    loaded         = 0;
 
 /** Optional. 
  *  Will be called once after successfull load into ecmc.
@@ -48,6 +55,13 @@ static int    dbgModeOption  = 0;
  **/
 int adv_exampleConstruct(char * configStr)
 {
+  // Ensure that plugin is only loaded once
+  if(loaded && !ECMC_PLUGIN_ALLOW_MULTI_LOAD) {
+    printf("%s/%s:%d: Error: Module already loaded (0x%x).\n",__FILE__, __FUNCTION__,
+           __LINE__,ECMC_PLUGIN_ERROR_ALREADY_LOADED);
+    return ECMC_PLUGIN_ERROR_ALREADY_LOADED;
+  }
+
   confStr = strdup(configStr);
   //Only one option defined "DBG_PRINT=" (no need for loop)
   int tempValue=0;
@@ -67,6 +81,8 @@ int adv_exampleConstruct(char * configStr)
   // init asyn param counter
   initAsyn(ecmcAsynPort);
   
+  // Prevent loading more than once
+  loaded = 1;
   return 0;
 }
 
