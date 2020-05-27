@@ -193,7 +193,8 @@ struct ecmcPluginData pluginDataDef = {
         .funcArg7  = NULL,
         .funcArg8  = NULL,
         .funcArg9  = NULL,
-        .funcArg10 = NULL
+        .funcArg10 = NULL,
+        .funcGenericObj = NULL,
       },
   .funcs[1] =
       { /*----customPlcFunc2----*/
@@ -215,7 +216,8 @@ struct ecmcPluginData pluginDataDef = {
         .funcArg7  = NULL,
         .funcArg8  = NULL,
         .funcArg9  = NULL,
-        .funcArg10 = NULL
+        .funcArg10 = NULL,
+        .funcGenericObj = NULL,        
       },
   .funcs[2] = {0}, // last element set all to zero..
 
