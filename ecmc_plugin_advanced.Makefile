@@ -40,7 +40,7 @@ ifneq ($(strip $(ECMC_DEP_VERSION)),)
 ecmc_VERSION=$(ECMC_DEP_VERSION)
 endif
 
-APP:=ecmcPlugin_AdvancedApp
+APP:=ecmc_plugin_advancedApp
 APPDB:=$(APP)/Db
 APPSRC:=$(APP)/src
 

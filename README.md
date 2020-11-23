@@ -1,6 +1,6 @@
-e3-ecmcPlugin_Advanced
+e3-ecmc_plugin_advanced
 ======
-ESS Site-specific EPICS module : ecmcPlugin_Advanced
+ESS Site-specific EPICS module : ecmc_plugin_advanced
 
 Example illustrating how to implement plugins for use with ecmc (https://github.com/icshwi/ecmc).
 
